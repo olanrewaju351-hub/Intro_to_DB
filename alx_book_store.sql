@@ -1,26 +1,18 @@
 -- FILE: alx_book_store.sql
 -- Database for ALX online bookstore
 
--- Create the database if it doesn't already exist
 CREATE DATABASE IF NOT EXISTS alx_book_store
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 
--- Switch to the database
 USE alx_book_store;
 
--- ========================
--- TABLE: AUTHORS
--- ========================
 CREATE TABLE IF NOT EXISTS Authors (
     author_id INT NOT NULL AUTO_INCREMENT,
     author_name VARCHAR(215) NOT NULL,
     PRIMARY KEY (author_id)
 ) ENGINE=InnoDB;
 
--- ========================
--- TABLE: BOOKS
--- ========================
 CREATE TABLE IF NOT EXISTS Books (
     book_id INT NOT NULL AUTO_INCREMENT,
     title VARCHAR(130) NOT NULL,
@@ -36,9 +28,6 @@ CREATE TABLE IF NOT EXISTS Books (
         ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- ========================
--- TABLE: CUSTOMERS
--- ========================
 CREATE TABLE IF NOT EXISTS Customers (
     customer_id INT NOT NULL AUTO_INCREMENT,
     customer_name VARCHAR(215) NOT NULL,
@@ -47,9 +36,6 @@ CREATE TABLE IF NOT EXISTS Customers (
     PRIMARY KEY (customer_id)
 ) ENGINE=InnoDB;
 
--- ========================
--- TABLE: ORDERS
--- ========================
 CREATE TABLE IF NOT EXISTS Orders (
     order_id INT NOT NULL AUTO_INCREMENT,
     customer_id INT NOT NULL,
@@ -57,15 +43,11 @@ CREATE TABLE IF NOT EXISTS Orders (
     PRIMARY KEY (order_id),
     INDEX idx_orders_customer (customer_id),
     CONSTRAINT fk_orders_customer
-        FOREIGN KEY (customer_id)
-        REFERENCES Customers(customer_id)
+        FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)
         ON DELETE RESTRICT
         ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- ========================
--- TABLE: ORDER_DETAILS
--- ========================
 CREATE TABLE IF NOT EXISTS Order_Details (
     orderdetailid INT NOT NULL AUTO_INCREMENT,
     order_id INT NOT NULL,
@@ -86,9 +68,7 @@ CREATE TABLE IF NOT EXISTS Order_Details (
         ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- ========================
 -- SAMPLE DATA
--- ========================
 INSERT INTO Authors (author_name) VALUES
 ('Chinua Achebe'),
 ('Chimamanda Ngozi Adichie'),
@@ -112,17 +92,12 @@ INSERT INTO Order_Details (order_id, book_id, quantity) VALUES
 (1, 3, 2),
 (2, 2, 1);
 
--- ========================
 -- SAMPLE QUERIES
--- ========================
-
--- List books with their authors
 SELECT B.book_id, B.title, A.author_name, B.price, B.publication_date
 FROM Books B
 JOIN Authors A ON B.author_id = A.author_id
 ORDER BY B.title;
 
--- Get each customer's orders and total price
 SELECT O.order_id, O.order_date, C.customer_name,
        SUM(B.price * OD.quantity) AS order_total
 FROM Orders O
@@ -131,13 +106,3 @@ JOIN Order_Details OD ON O.order_id = OD.order_id
 JOIN Books B ON OD.book_id = B.book_id
 GROUP BY O.order_id, O.order_date, C.customer_name
 ORDER BY O.order_date DESC;
-
--- View order details for a specific order
-SELECT O.order_id, C.customer_name, B.title, OD.quantity, B.price,
-       (B.price * OD.quantity) AS line_total
-FROM Orders O
-JOIN Customers C ON O.customer_id = C.customer_id
-JOIN Order_Details OD ON O.order_id = OD.order_id
-JOIN Books B ON OD.book_id = B.book_id
-WHERE O.order_id = 1;
-
