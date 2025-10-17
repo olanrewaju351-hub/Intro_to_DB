@@ -1,19 +1,23 @@
 -- FILE: alx_book_store.sql
 -- Database for ALX online bookstore
 
-DROP DATABASE IF EXISTS alx_book_store;
-CREATE DATABASE alx_book_store CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+-- Create the database only if it doesn't already exist
+CREATE DATABASE IF NOT EXISTS alx_book_store
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+
+-- Switch to the database
 USE alx_book_store;
 
 -- AUTHORS table
-CREATE TABLE Authors (
+CREATE TABLE IF NOT EXISTS Authors (
     author_id INT NOT NULL AUTO_INCREMENT,
     author_name VARCHAR(215) NOT NULL,
     PRIMARY KEY (author_id)
 ) ENGINE=InnoDB;
 
 -- BOOKS table
-CREATE TABLE Books (
+CREATE TABLE IF NOT EXISTS Books (
     book_id INT NOT NULL AUTO_INCREMENT,
     title VARCHAR(130) NOT NULL,
     author_id INT NOT NULL,
@@ -29,7 +33,7 @@ CREATE TABLE Books (
 ) ENGINE=InnoDB;
 
 -- CUSTOMERS table
-CREATE TABLE Customers (
+CREATE TABLE IF NOT EXISTS Customers (
     customer_id INT NOT NULL AUTO_INCREMENT,
     customer_name VARCHAR(215) NOT NULL,
     email VARCHAR(215) UNIQUE,
@@ -38,7 +42,7 @@ CREATE TABLE Customers (
 ) ENGINE=InnoDB;
 
 -- ORDERS table
-CREATE TABLE Orders (
+CREATE TABLE IF NOT EXISTS Orders (
     order_id INT NOT NULL AUTO_INCREMENT,
     customer_id INT NOT NULL,
     order_date DATE NOT NULL,
@@ -52,7 +56,7 @@ CREATE TABLE Orders (
 ) ENGINE=InnoDB;
 
 -- ORDER_DETAILS table
-CREATE TABLE Order_Details (
+CREATE TABLE IF NOT EXISTS Order_Details (
     orderdetailid INT NOT NULL AUTO_INCREMENT,
     order_id INT NOT NULL,
     book_id INT NOT NULL,
@@ -72,7 +76,7 @@ CREATE TABLE Order_Details (
         ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- SAMPLE DATA (optional, helpful for testing)
+-- SAMPLE DATA (for testing)
 INSERT INTO Authors (author_name) VALUES
 ('Chinua Achebe'),
 ('Chimamanda Ngozi Adichie'),
@@ -113,11 +117,3 @@ JOIN Books B ON OD.book_id = B.book_id
 GROUP BY O.order_id, O.order_date, C.customer_name
 ORDER BY O.order_date DESC;
 
--- 3) Get details of a specific order (items)
-SELECT O.order_id, O.order_date, C.customer_name, B.title, OD.quantity, B.price,
-       (OD.quantity * B.price) AS line_total
-FROM Orders O
-JOIN Customers C ON O.customer_id = C.customer_id
-JOIN Order_Details OD ON O.order_id = OD.order_id
-JOIN Books B ON OD.book_id = B.book_id
-WHERE O.order_id = 1;
