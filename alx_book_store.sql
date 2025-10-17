@@ -140,3 +140,4 @@ JOIN Customers C ON O.customer_id = C.customer_id
 JOIN Order_Details OD ON O.order_id = OD.order_id
 JOIN Books B ON OD.book_id = B.book_id
 WHERE O.order_id = 1;
+
