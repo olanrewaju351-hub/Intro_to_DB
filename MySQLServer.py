@@ -3,7 +3,6 @@
 MySQLServer.py
 Creates the database 'alx_book_store' on the MySQL server.
 If the database already exists, the script will not fail.
-Does NOT use SELECT or SHOW statements.
 """
 
 import mysql.connector
@@ -24,12 +23,11 @@ def main():
         if connection.is_connected():
             cursor = connection.cursor()
 
-            # ✅ Only this CREATE command (no SELECT or SHOW)
+            # Only this CREATE command
             cursor.execute("CREATE DATABASE IF NOT EXISTS alx_book_store")
 
             print("Database 'alx_book_store' created successfully!")
 
-    # ✅ Required for checker
     except mysql.connector.Error as e:
         print("Error: Could not connect to MySQL server or create database.")
         print("MySQL Error:", e)
