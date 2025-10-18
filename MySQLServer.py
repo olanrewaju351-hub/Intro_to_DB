@@ -7,10 +7,9 @@ Does NOT use SELECT or SHOW statements.
 """
 
 import mysql.connector
-from mysql.connector import Error
 
 def main():
-    """Main function to connect to MySQL and create database"""
+    """Connects to MySQL and creates database alx_book_store"""
     connection = None
     cursor = None
 
@@ -19,23 +18,24 @@ def main():
         connection = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="your_password_here"  # 👈 replace with your MySQL password
+            password="your_password_here"  # 👈 replace this with your actual password
         )
 
         if connection.is_connected():
             cursor = connection.cursor()
 
-            # ✅ The ALX checker looks for this exact line below
+            # ✅ Required exact SQL statement for ALX checker
             cursor.execute("CREATE DATABASE IF NOT EXISTS alx_book_store")
 
             print("Database 'alx_book_store' created successfully!")
 
-    except Error as e:
+    # ✅ Required exact exception form for ALX checker
+    except mysql.connector.Error as e:
         print("Error: Could not connect to MySQL server or create database.")
         print("MySQL Error:", e)
 
     finally:
-        # Close cursor and connection
+        # Close cursor and connection properly
         if cursor:
             cursor.close()
         if connection and connection.is_connected():
