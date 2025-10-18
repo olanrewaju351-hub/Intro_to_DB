@@ -43,8 +43,7 @@ CREATE TABLE IF NOT EXISTS Orders (
     PRIMARY KEY (order_id),
     INDEX idx_orders_customer (customer_id),
     CONSTRAINT fk_orders_customer
-        FOREIGN KEY (customer_id)
-        REFERENCES Customers(customer_id)
+        FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)
         ON DELETE RESTRICT
         ON UPDATE CASCADE
 ) ENGINE=InnoDB;
@@ -58,11 +57,13 @@ CREATE TABLE IF NOT EXISTS Order_Details (
     INDEX idx_od_order (order_id),
     INDEX idx_od_book (book_id),
     CONSTRAINT fk_od_order
-        FOREIGN KEY (order_id) REFERENCES Orders(order_id)
+        FOREIGN KEY (order_id)
+        REFERENCES Orders(order_id)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
     CONSTRAINT fk_od_book
-        FOREIGN KEY (book_id) REFERENCES Books(book_id)
+        FOREIGN KEY (book_id)
+        REFERENCES Books(book_id)
         ON DELETE RESTRICT
         ON UPDATE CASCADE
 ) ENGINE=InnoDB;
