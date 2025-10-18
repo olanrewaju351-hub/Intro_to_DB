@@ -1,45 +1,41 @@
 #!/usr/bin/env python3
 """
-MySQLServer.py
-Creates the database 'alx_book_store' on the MySQL server.
-If the database already exists, the script will not fail.
-Does NOT use SELECT or SHOW statements.
+Script to create alx_book_store database in MySQL
 """
 
 import mysql.connector
+from mysql.connector import Error
 
-def main():
-    """Connects to MySQL and creates database alx_book_store"""
+def create_database():
     connection = None
-    cursor = None
-
     try:
         # Connect to MySQL server
         connection = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="your_password_here"  # 👈 replace this with your actual password
+            host='localhost',
+            user='root',
+            password='',
+            port=3306
         )
-
+        
         if connection.is_connected():
             cursor = connection.cursor()
-
-            # ✅ Required exact SQL statement for ALX checker
+            
+            # Create database if it doesn't exist
             cursor.execute("CREATE DATABASE IF NOT EXISTS alx_book_store")
-
             print("Database 'alx_book_store' created successfully!")
-
-    # ✅ Required exact exception form for ALX checker
-    except mysql.connector.Error as e:
-        print("Error: Could not connect to MySQL server or create database.")
-        print("MySQL Error:", e)
-
-    finally:
-        # Close cursor and connection properly
-        if cursor:
+            
             cursor.close()
+        
+    except Error as e:
+        print(f"Error: {e}")
+        
+    except Exception as e:
+        print(f"Error: {e}")
+        
+    finally:
+        # Handle closing the database connection
         if connection and connection.is_connected():
             connection.close()
 
 if __name__ == "__main__":
-    main()
+    create_database()
